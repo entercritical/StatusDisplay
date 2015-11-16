@@ -9,8 +9,11 @@
 
  */
 #include <SoftwareSerial.h>
+#include "BluetoothManager.h"
+#include "LedDisplay.h"
 
-SoftwareSerial btSerial(8, 9); // RX, TX
+BluetoothManager bluetoothManager(8, 9);
+LedDisplay ledDisplay(12, 10, 11, 1);
 
 void setup()
 {
@@ -25,13 +28,15 @@ void setup()
 
   pinMode(13, OUTPUT);
   // set the data rate for the SoftwareSerial port
-  btSerial.begin(9600);
+  bluetoothManager.begin(9600);
+
+  ledDisplay.setup();
 }
 
 void loop() // run over and over
 {
-  if (btSerial.available()) {
-    char c = btSerial.read();
+  if (bluetoothManager.available()) {
+    char c = bluetoothManager.read();
     Serial.write(c);
     if (c == '0') {
       digitalWrite(13, LOW);  
@@ -41,5 +46,6 @@ void loop() // run over and over
   }
   //if (Serial.available())
   //  btSerial.write(Serial.read());
+  ledDisplay.update();
 }
 
